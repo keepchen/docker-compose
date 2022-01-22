@@ -1,0 +1,26 @@
+version: "3.1"
+
+services:
+  gitlab-ce-web:
+    image: "gitlab/gitlab-ce:latest"
+    restart: always
+    hostname: "192.168.224.1"
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url "http://192.168.224.1:8088"
+        # Add any other gitlab.rb configuration here, each on its own line
+    ports:
+      - "8088:8088"
+      - "8443:443"
+      - "822:22"
+    volumes:
+      - ./data/config/gitlab:/etc/gitlab
+      - ./data/logs:/var/log/gitlab
+      - ./data/data:/var/opt/gitlab
+
+  gitlab-runner:
+    image: "gitlab/gitlab-runner:latest"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/config/gitlab-runner:/etc/gitlab-runner

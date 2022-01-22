@@ -1,0 +1,5 @@
+[mysqld]
+slow_query_log=on
+long_query_time=3
+#log_queries_not_using_indexes=on
+max_connections=1000

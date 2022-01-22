@@ -1,0 +1,46 @@
+version: "3.1"
+
+services:
+  drone-server:
+    container_name: drone-server
+    image: "drone/drone:latest"
+    environment:
+      - DRONE_GITLAB_SERVER=CHANGE_ME #http://192.168.224.1:8888
+      - DRONE_GITLAB_CLIENT_ID=CHANGE_ME
+      - DRONE_GITLAB_CLIENT_SECRET=CHANGE_ME
+      - DRONE_RPC_SECRET=CHANGE_ME
+      - DRONE_SERVER_HOST=CHANGE_ME #192.168.224.2:9080
+      - DRONE_SERVER_PROTO=http
+      - DRONE_LOGS_DEBUG=true
+      - DRONE_LOGS_TEXT=true
+      - DRONE_LOGS_PRETTY=true
+      - DRONE_LOGS_COLOR=false
+      - DRONE_DATABASE_DRIVER=mysql
+      - DRONE_DATABASE_DATASOURCE=CHANGE_ME #root:123456@tcp(192.168.224.1:3306)/drone?parseTime=true
+      - DRONE_USER_CREATE=username:keepchen,admin:true,token:CHANGE_ME
+    ports:
+      - "9080:80"
+      - "9443:443"
+    restart: always
+    volumes:
+      - ./data:/data
+
+  drone-runner:
+    container_name: drone-runner
+    image: "drone/drone-runner-docker:latest"
+    environment:
+      - DRONE_RPC_PROTO=http
+      - DRONE_RPC_HOST=CHANGE_ME #192.168.224.2:9080
+      - DRONE_RPC_SECRET=CHANGE_ME
+      - DRONE_RUNNER_CAPACITY=5
+      - DRONE_RUNNER_NAME=CHANGE_ME #192.168.224.3
+      - DRONE_LOGS_DEBUG=true
+      - DRONE_LOGS_TEXT=true
+      - DRONE_LOGS_PRETTY=true
+      - DRONE_LOGS_COLOR=false
+    ports:
+      - "9030:3000"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+

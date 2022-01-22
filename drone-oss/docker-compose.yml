@@ -1,0 +1,28 @@
+version: "3.1"
+
+services:
+  drone-server:
+    container_name: drone-server
+    image: "keepchen/drone:2.0.4"
+    environment:
+      - DRONE_GITLAB_SERVER=CHANGE_ME #http://192.168.224.1:8888
+      - DRONE_GITLAB_CLIENT_ID=CHANGE_ME
+      - DRONE_GITLAB_CLIENT_SECRET=CHANGE_ME
+      # - DRONE_RPC_SECRET=CHANGE_ME
+      - DRONE_SERVER_HOST=192.168.224.50:9080
+      - DRONE_SERVER_PROTO=http
+      - DRONE_LOGS_DEBUG=true
+      - DRONE_LOGS_TEXT=true
+      - DRONE_LOGS_PRETTY=true
+      - DRONE_LOGS_COLOR=false
+      - DRONE_AGENTS_DISABLED=true
+      # - DRONE_DATABASE_DRIVER=mysql
+      # - DRONE_DATABASE_DATASOURCE=root:12345678@tcp(127.0.0.1:3306)/drone?parseTime=true
+      - DRONE_USER_CREATE=username:keepchen,admin:true,token:CHANGE_ME
+    ports:
+      - "9080:80"
+      - "9443:443"
+    restart: always
+    volumes:
+      - ./data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
