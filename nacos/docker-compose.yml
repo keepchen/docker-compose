@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  nacos:
+    image: nacos/nacos-server
+    container_name: nacos
+    environment:
+      # 单机模式启动
+      - MODE=standalone
+      # 保存策略：mysql/empty
+      - SPRING_DATASOURCE_PLATFORM=mysql
+      # 更改mysql配置
+      - MYSQL_SERVICE_HOST=CHANGE_ME
+      - MYSQL_SERVICE_DB_NAME=nacos_config
+      - MYSQL_SERVICE_PORT=3306
+      - MYSQL_SERVICE_USER=CHANGE_ME
+      - MYSQL_SERVICE_PASSWORD=CHANGE_ME
+      # 修改jvm参数
+      - JVM_XMS=512m
+      - JVM_XMX=512m
+      - JVM_MS=64m
+      - JVM_MMS=64m
+      # 是否开启远程Debug
+      - NACOS_DEBUG=no
+      - TOMCAT_ACCESSLOG_ENABLED=false
+    volumes:
+      - ./data/nacos/logs/:/home/nacos/logs
+      - ./data/nacos/custom.properties:/home/nacos/init.d/custom.properties
+    ports:
+      - "8848:8848"
+      - "9849:9849"
+      - "9848:9848"
+    restart: always
