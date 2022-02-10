@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  activeMQ:
+    image: "rmohr/activemq:5.15.4-alpine"
+    container_name: activeMQ
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+    volumes:
+      - ./data/conf:/mnt/conf
+      - ./data/data:/mnt/data
+    restart: always
