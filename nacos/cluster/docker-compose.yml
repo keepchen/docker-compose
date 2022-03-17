@@ -1,0 +1,45 @@
+version: "3.1"
+
+services:
+  nacos1:
+    image: nacos/nacos-server
+    container_name: nacos1
+    network_mode: "host"
+    volumes:
+      - ./logs/nacos:/home/nacos/logs
+      - ./data/nacos:/home/nacos/data
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    environment:
+      - NACOS_SERVERS=10.9.10.105:8848 10.9.10.17:8848
+      - SPRING_DATASOURCE_PLATFORM=mysql
+      - MYSQL_SERVICE_HOST=10.9.10.105
+      - MYSQL_SERVICE_DB_NAME=nacos_cluster
+      - MYSQL_SERVICE_PORT=33061
+      - MYSQL_SERVICE_USER=root
+      - MYSQL_SERVICE_PASSWORD=fake
+      - MYSQL_SERVICE_DB_PARAM=characterEncoding=utf8&connectTimeout=20000&socketTimeout=30000&autoReconnect=true&useSSL=false&serverTimezone=UTC
+    restart: always
+
+  # another machine...
+  nacos2:
+    image: nacos/nacos-server
+    container_name: nacos2
+    network_mode: "host"
+    volumes:
+      - ./logs/nacos:/home/nacos/logs
+      - ./data/nacos:/home/nacos/data
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    environment:
+      - NACOS_SERVERS=10.9.10.105:8848 10.9.10.17:8848
+      - SPRING_DATASOURCE_PLATFORM=mysql
+      - MYSQL_SERVICE_HOST=10.9.10.105
+      - MYSQL_SERVICE_DB_NAME=nacos_cluster
+      - MYSQL_SERVICE_PORT=33061
+      - MYSQL_SERVICE_USER=root
+      - MYSQL_SERVICE_PASSWORD=fake
+      - MYSQL_SERVICE_DB_PARAM=characterEncoding=utf8&connectTimeout=20000&socketTimeout=30000&autoReconnect=true&useSSL=false&serverTimezone=UTC
+    restart: always
