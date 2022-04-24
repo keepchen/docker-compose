@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  svn-server:
+    # @see https://hub.docker.com/r/elleflorio/svn-server
+    # create user:
+    #   docker exec -t {container-id} htpasswd -b /etc/subversion/passwd <username> <password>
+    # create repository:
+    #   docker exec -t {container-id} svnadmin create /home/svn/<repository_name>
+    image: elleflorio/svn-server:latest
+    ports:
+      - "80:80"
+      - "3690:3690"
+    volumes:
+      - ./data/svndata:/home/svn
+      - ./data/config/subversion-access-control:/etc/subversion/subversion-access-control
+    restart: always
