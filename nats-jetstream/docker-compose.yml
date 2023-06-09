@@ -5,26 +5,45 @@ services:
     ports:
       - "8222:8222"
       - "4222:4222"
-    command: "--cluster_name NATS --config /conf/cluster.conf --http_port 8222 -js"
+    command: "--cluster_name NATS --config /conf/cluster.conf --http_port 8222"
     networks: ["nats"]
     volumes:
       - ./data/nats-1:/data
       - ./conf/nats-1:/conf
+    environment:
+      - ADMIN_PASS=changeMe
+      - CLIENT_PASS=changeMe
+      - SERVICE_PASS=changeMe
+      - OTHER_PASS=changeMe
   nats-1:
     image: nats:2.9.17
-    command: "--cluster_name NATS --config /conf/cluster.conf -js"
+    ports:
+      - "4223:4222"
+    command: "--cluster_name NATS --config /conf/cluster.conf"
     networks: ["nats"]
     volumes:
       - ./data/nats-2:/data
       - ./conf/nats-2:/conf
+    environment:
+      - ADMIN_PASS=changeMe
+      - CLIENT_PASS=changeMe
+      - SERVICE_PASS=changeMe
+      - OTHER_PASS=changeMe
     depends_on: ["nats"]
   nats-2:
     image: nats:2.9.17
-    command: "--cluster_name NATS --config /conf/cluster.conf -js"
+    ports:
+      - "4224:4222"
+    command: "--cluster_name NATS --config /conf/cluster.conf"
     networks: ["nats"]
     volumes:
       - ./data/nats-3:/data
       - ./conf/nats-3:/conf
+    environment:
+      - ADMIN_PASS=changeMe
+      - CLIENT_PASS=changeMe
+      - SERVICE_PASS=changeMe
+      - OTHER_PASS=changeMe
     depends_on: ["nats"]
 
 networks:
