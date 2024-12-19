@@ -3,7 +3,7 @@ version: "3"
 
 services:
   redis-node1:
-    image: "bitnami/redis-cluster:latest"
+    image: "bitnami/redis-cluster:6.2.6"
     container_name: redis-node1
     environment:
       - REDIS_PORT_NUMBER=6379
@@ -21,7 +21,7 @@ services:
     restart: always
 
   redis-node2:
-    image: "bitnami/redis-cluster:latest"
+    image: "bitnami/redis-cluster:6.2.6"
     container_name: redis-node2
     environment:
       - REDIS_PORT_NUMBER=6380
@@ -39,7 +39,7 @@ services:
     restart: always
 
   redis-node3:
-    image: "bitnami/redis-cluster:latest"
+    image: "bitnami/redis-cluster:6.2.6"
     container_name: redis-node3
     environment:
       - REDIS_PORT_NUMBER=6381
@@ -57,7 +57,7 @@ services:
     restart: always
 
   redis-node4:
-    image: "bitnami/redis-cluster:latest"
+    image: "bitnami/redis-cluster:6.2.6"
     container_name: redis-node4
     environment:
       - REDIS_PORT_NUMBER=6382
@@ -75,7 +75,7 @@ services:
     restart: always
 
   redis-node5:
-    image: "bitnami/redis-cluster:latest"
+    image: "bitnami/redis-cluster:6.2.6"
     container_name: redis-node5
     environment:
       - REDIS_PORT_NUMBER=6383
@@ -93,7 +93,7 @@ services:
     restart: always
 
   redis-node6:
-    image: "bitnami/redis-cluster:latest"
+    image: "bitnami/redis-cluster:6.2.6"
     container_name: redis-node6
     environment:
       - REDIS_PORT_NUMBER=6384
