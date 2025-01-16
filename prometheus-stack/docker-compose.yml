@@ -1,0 +1,86 @@
+networks:
+  monitor:
+    name: monitor
+    driver: bridge
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/:/etc/prometheus
+    networks:
+      - monitor
+    container_name: prometheus
+    environment:
+      - --web.enable-admin-api
+      - --web.enable-lifecycle
+
+  node-exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    network_mode: host
+    pid: host
+    volumes:
+      - /:/host:ro,rslave
+    command: --path.rootfs=/host
+    depends_on:
+      - prometheus
+
+  blackbox-exporter:
+    image: quay.io/prometheus/blackbox-exporter:latest
+    container_name: blackbox-exporter
+    restart: unless-stopped
+    ports:
+      - "9115:9115"
+    volumes:
+      - ./blackbox-exporter/:/config
+    command: --config.file=/config/blackbox.yml
+    depends_on:
+      - prometheus
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    restart: unless-stopped
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    ports:
+      - "9093:9093"
+    networks:
+      - monitor
+
+  dingtalk-webhook:
+    image: timonwong/prometheus-webhook-dingtalk:latest
+    restart: unless-stopped
+    volumes:
+      - ./dingtalk-webhook/config.yml:/etc/prometheus-webhook-dingtalk/config.yml
+      - ./dingtalk-webhook/templates:/etc/prometheus-webhook-dingtalk/templates
+    ports:
+      - 8060:8060
+    command: ["--config.file=/etc/prometheus-webhook-dingtalk/config.yml", "--web.enable-ui", "--web.enable-lifecycle"]
+    networks:
+      - monitor
+    container_name: dingtalk-webhook
+    depends_on:
+      - prometheus
+      - node-exporter
+      - blackbox-exporter
+
+  grafana:
+    image: grafana/grafana-enterprise
+    user: root
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    networks:
+      - monitor
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+    container_name: grafana
+    depends_on:
+      - prometheus
