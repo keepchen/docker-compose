@@ -1,0 +1,123 @@
+version: '3.8'
+
+services:
+  valkey-node1:
+    image: valkey/valkey:latest
+    container_name: valkey-node1
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+      - "16379:16379"
+    volumes:
+      - ./nodes/node1/data:/data
+      - ./nodes/node1/valkey-node.conf:/usr/local/etc/valkey/valkey.conf
+    command: >
+      valkey-server /usr/local/etc/valkey/valkey.conf 
+      --cluster-announce-ip 192.168.100.19
+      --cluster-announce-port 6379
+      --cluster-announce-bus-port 16379
+    networks:
+      valkey-net:
+        ipv4_address: 172.20.0.11
+
+  valkey-node2:
+    image: valkey/valkey:latest
+    container_name: valkey-node2
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+      - "16380:16379"
+    volumes:
+      - ./nodes/node2/data:/data
+      - ./nodes/node2/valkey-node.conf:/usr/local/etc/valkey/valkey.conf
+    command: >
+      valkey-server /usr/local/etc/valkey/valkey.conf 
+      --cluster-announce-ip 192.168.100.19
+      --cluster-announce-port 6380
+      --cluster-announce-bus-port 16380
+    networks:
+      valkey-net:
+        ipv4_address: 172.20.0.12
+
+  valkey-node3:
+    image: valkey/valkey:latest
+    container_name: valkey-node3
+    restart: unless-stopped
+    ports:
+      - "6381:6379"
+      - "16381:16379"
+    volumes:
+      - ./nodes/node3/data:/data
+      - ./nodes/node3/valkey-node.conf:/usr/local/etc/valkey/valkey.conf
+    command: >
+      valkey-server /usr/local/etc/valkey/valkey.conf 
+      --cluster-announce-ip 192.168.100.19
+      --cluster-announce-port 6381 
+      --cluster-announce-bus-port 16381
+    networks:
+      valkey-net:
+        ipv4_address: 172.20.0.13
+
+  valkey-node4:
+    image: valkey/valkey:latest
+    container_name: valkey-node4
+    restart: unless-stopped
+    ports:
+      - "6382:6379"
+      - "16382:16379"
+    volumes:
+      - ./nodes/node4/data:/data
+      - ./nodes/node4/valkey-node.conf:/usr/local/etc/valkey/valkey.conf
+    command: >
+      valkey-server /usr/local/etc/valkey/valkey.conf 
+      --cluster-announce-ip 192.168.100.19
+      --cluster-announce-port 6382
+      --cluster-announce-bus-port 16382
+    networks:
+      valkey-net:
+        ipv4_address: 172.20.0.14
+
+  valkey-node5:
+    image: valkey/valkey:latest
+    container_name: valkey-node5
+    restart: unless-stopped
+    ports:
+      - "6383:6379"
+      - "16383:16379"
+    volumes:
+      - ./nodes/node5/data:/data
+      - ./nodes/node5/valkey-node.conf:/usr/local/etc/valkey/valkey.conf
+    command: > 
+      valkey-server /usr/local/etc/valkey/valkey.conf 
+      --cluster-announce-ip 192.168.100.19
+      --cluster-announce-port 6383 
+      --cluster-announce-bus-port 16383
+    networks:
+      valkey-net:
+        ipv4_address: 172.20.0.15
+
+  valkey-node6:
+    image: valkey/valkey:latest
+    container_name: valkey-node6
+    restart: unless-stopped
+    ports:
+      - "6384:6379"
+      - "16384:16379"
+    volumes:
+      - ./nodes/node6/data:/data
+      - ./nodes/node6/valkey-node.conf:/usr/local/etc/valkey/valkey.conf
+    command: >
+      valkey-server /usr/local/etc/valkey/valkey.conf 
+      --cluster-announce-ip 192.168.100.19
+      --cluster-announce-port 6384
+      --cluster-announce-bus-port 16384
+    networks:
+      valkey-net:
+        ipv4_address: 172.20.0.16
+
+networks:
+  valkey-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
