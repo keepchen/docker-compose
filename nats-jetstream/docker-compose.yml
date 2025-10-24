@@ -1,51 +1,63 @@
-version: "3.5"
+version: "3.8"
+
 services:
-  nats:
-    image: nats:2.9.17
+  nats1:
+    image: nats:2.10-alpine
+    container_name: nats1
+    hostname: nats1
+    restart: always
     ports:
-      - "8222:8222"
-      - "4222:4222"
-    command: "--cluster_name NATS --config /conf/cluster.conf --http_port 8222"
-    networks: ["nats"]
+      - "4222:4222"   # 客户端连接
+      - "8222:8222"   # 监控
+      - "6222:6222"   # 集群通信
+    command: ["-c", "/etc/nats/nats.conf"]
     volumes:
-      - ./data/nats-1:/data
-      - ./conf/nats-1:/conf
-    environment:
-      - ADMIN_PASS=changeMe
-      - CLIENT_PASS=changeMe
-      - SERVICE_PASS=changeMe
-      - OTHER_PASS=changeMe
-  nats-1:
-    image: nats:2.9.17
+      - ./conf/nats1.conf:/etc/nats/nats.conf
+      - ./data/nats1-data:/data/jetstream
+
+  nats2:
+    image: nats:2.10-alpine
+    container_name: nats2
+    hostname: nats2
+    restart: always
     ports:
       - "4223:4222"
-    command: "--cluster_name NATS --config /conf/cluster.conf"
-    networks: ["nats"]
+      - "8223:8222"
+      - "6223:6222"
+    command: ["-c", "/etc/nats/nats.conf"]
     volumes:
-      - ./data/nats-2:/data
-      - ./conf/nats-2:/conf
-    environment:
-      - ADMIN_PASS=changeMe
-      - CLIENT_PASS=changeMe
-      - SERVICE_PASS=changeMe
-      - OTHER_PASS=changeMe
-    depends_on: ["nats"]
-  nats-2:
-    image: nats:2.9.17
+      - ./conf/nats2.conf:/etc/nats/nats.conf
+      - ./data/nats2-data:/data/jetstream
+
+  nats3:
+    image: nats:2.10-alpine
+    container_name: nats3
+    hostname: nats3
+    restart: always
     ports:
       - "4224:4222"
-    command: "--cluster_name NATS --config /conf/cluster.conf"
-    networks: ["nats"]
+      - "8224:8222"
+      - "6224:6222"
+    command: ["-c", "/etc/nats/nats.conf"]
     volumes:
-      - ./data/nats-3:/data
-      - ./conf/nats-3:/conf
-    environment:
-      - ADMIN_PASS=changeMe
-      - CLIENT_PASS=changeMe
-      - SERVICE_PASS=changeMe
-      - OTHER_PASS=changeMe
-    depends_on: ["nats"]
+      - ./conf/nats3.conf:/etc/nats/nats.conf
+      - ./data/nats3-data:/data/jetstream
 
-networks:
-  nats:
-    name: nats
+  nats-box:
+    image: natsio/nats-box:latest
+    container_name: nats-box
+    restart: unless-stopped
+    command: /bin/sh
+    stdin_open: true
+    tty: true
+    depends_on:
+      - nats1
+      - nats2
+      - nats3
+    environment:
+      - NATS_URL=nats://user123:pass123@nats1:4222
+
+volumes:
+  nats1-data:
+  nats2-data:
+  nats3-data:
